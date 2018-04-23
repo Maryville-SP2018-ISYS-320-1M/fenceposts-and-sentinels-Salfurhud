@@ -1,7 +1,7 @@
 /*
 	ISYS 320
-	Name(s):
-	Date: 
+	Name(s):AlfurhudSolomon
+	Date: Apr22, 2018
 */
 
 
@@ -11,12 +11,55 @@ import java.util.Scanner;
 public class P2_InfiniteGuessingGame {
 
 	public static void main(String[] args) {
-		int secretNumber = getSecretNumber();
-		int numberOfGuessesAllowed = 7;
 
-		outputWelcomeMessage();
-		int guessesTaken = playGame(secretNumber, numberOfGuessesAllowed);
-		outputEndingMessage(guessesTaken, numberOfGuessesAllowed, secretNumber);
+		Scanner console = new Scanner( System.in );
+		
+		String quit = "";
+		
+		//track number of games played
+		int gamesPlayed = 0;
+		
+		//track number of wins
+		int wins = 0;
+		
+		//track total guesses
+		int totalGuessesTaken = 0;
+		
+		//loop until the user enter the word quit
+		while(!quit.equals("quit"))
+		{
+			//increment the number of games
+			gamesPlayed++;
+			
+			int secretNumber = getSecretNumber();
+			
+			outputWelcomeMessage();
+			int numberOfGuessesAllowed = 7;
+			
+			int guessesTaken = playGame(secretNumber, numberOfGuessesAllowed);
+			
+			//add number of guesses to the total guesses
+			totalGuessesTaken += guessesTaken;
+			
+			//if guesses taken is less or equal to number of guesses allowed then its a win
+			if(guessesTaken <= numberOfGuessesAllowed) {
+				wins++;
+			}
+			
+			outputEndingMessage(guessesTaken, numberOfGuessesAllowed, secretNumber);
+			
+			//Ask whether the player would like to continue playing the game
+			System.out.println("\n---------------------------------------------------------------------\n");
+			System.out.print("Type any character to continue playing (or \"quit\" to stop playing):");
+			quit = console.next();
+		}
+		
+		System.out.println("Game Over \n---------------------------------------------------------------------\n");
+		System.out.println("Games Played: " + gamesPlayed);
+		System.out.println("Number of Wins: " + wins);
+		System.out.println("Number of Losses: " + (gamesPlayed - wins));
+		System.out.println("Win Percentage: " + ((wins / gamesPlayed) * 100) + "%");
+		System.out.println("Average Number of Guesses: " + (totalGuessesTaken/gamesPlayed));
 	}
 
 	public static void outputWelcomeMessage() {
@@ -59,8 +102,11 @@ public class P2_InfiniteGuessingGame {
 
 			if (nextGuess == secretNumber) {
 				return numOfGuessesTaken;
-			} else {
-				System.out.println("Nope, guess again. ");
+			} else if(nextGuess > secretNumber) {
+				System.out.println("Nope, your guess was too large. ");
+				numOfGuessesTaken++;
+			} else if(nextGuess < secretNumber) {
+				System.out.println("Nope, your guess was too small. ");
 				numOfGuessesTaken++;
 			}
 		}
